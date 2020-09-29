@@ -1,8 +1,12 @@
 const { Router } = require('express')
-const { getDataRegisterByID, createRegister, getDataRegister, updateRegister, patchRegister, deleteRegister } = require('../controler/register')
+const { getDataRegisterByID, getDataRegister, updateRegister, patchRegister, deleteRegister, registerUser,loginUser } = require('../controler/register')
+
 const router = Router()
 
-router.post('/', createRegister)
+
+router.post('/register', registerUser)
+router.post('/login', loginUser)
+
 
 router.get('/:id', getDataRegisterByID)
 router.get('/', getDataRegister)

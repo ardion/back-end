@@ -6,28 +6,44 @@ const {
 } = require('../models/Worker')
 
 module.exports = {
-  createWorker: (req, res) => {
-    const {
-      id_user,
-      jobdesk,
-      domicile, workplace,
-      description_personal,
-      job_status, instagram, github, gitlab
-    } = req.body
-    console.log(req.body)
-    if (id_user, jobdesk, domicile, workplace, description_personal, job_status, instagram, github, gitlab) {
-      createWorkerModel([id_user, jobdesk, domicile, workplace, description_personal, job_status, instagram, github, gitlab], result => {
-        console.log(result)
-        res.status(201).send({
-          success: true,
-          message: 'Project Has Been Created',
-          data: req.body
-        })
+  createWorker: async (req, res) => {
+    try {
+      const {
+        id_user,
+        jobdesk,
+        domicile, workplace,
+        description_personal,
+        job_status, instagram, github, gitlab
+      } = req.body
+
+      const setData = {
+        id_user,
+        jobdesk,
+        domicile,
+        workplace,
+        description_personal,
+        job_status,
+        instagram,
+        github,
+        gitlab,
+        image: req.file === undefined ? '' : req.file.filename
+      }
+
+      console.log(req.body)
+      // if (name && description && price && duration) {
+      const resultCreate = await createWorkerModel(setData)
+      console.log(resultCreate)
+
+      res.status(201).send({
+        success: true,
+        message: 'Project Has Been Created',
+        data: setData
       })
-    } else {
+    } catch (error) {
+      console.log(error)
       res.status(500).send({
         success: false,
-        message: 'All field must be filled'
+        message: 'Bad Request'
       })
     }
   },

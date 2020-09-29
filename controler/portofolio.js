@@ -6,27 +6,42 @@ const {
 } = require('../models/Portofolio')
 
 module.exports = {
-  createPortofolio: (req, res) => {
-    const {
-      id_worker,
-      name_aplication, link_repository,
-      type_repository,
-      type_portofolio, picture
-    } = req.body
-    console.log(req.body)
-    if (id_worker, name_aplication, link_repository, type_repository, type_portofolio, picture) {
-      createPortofolioModel([id_worker, name_aplication, link_repository, type_repository, type_portofolio, picture], result => {
-        console.log(result)
-        res.status(201).send({
-          success: true,
-          message: 'Project Has Been Created',
-          data: req.body
-        })
+
+
+  createPortofolio: async (req, res) => {
+    try {
+      const {
+        id_worker,
+        name_aplication, link_repository,
+        type_repository,
+        type_portofolio
+      } = req.body
+
+      const setData = {
+        id_worker,
+        name_aplication,
+        link_repository,
+        type_repository,
+        type_portofolio,
+        image: req.file === undefined ? '' : req.file.filename
+      }
+
+
+      console.log(req.body)
+      console.log(setData)
+      const resultCreate = await createPortofolioModel(setData)
+      console.log(resultCreate)
+
+      res.status(201).send({
+        success: true,
+        message: 'Project Has Been Created',
+        data: setData
       })
-    } else {
+    } catch (error) {
+      console.log(error)
       res.status(500).send({
         success: false,
-        message: 'All field must be filled'
+        message: 'Bad Request'
       })
     }
   },

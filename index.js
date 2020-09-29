@@ -1,38 +1,46 @@
 const bodyParser = require('body-parser')
-const express=require('express')
-const app=express()
-const db=require('./helper/db')
+const express = require('express')
+const app = express()
+const db = require('./helper/db')
+require('dotenv').config()
+const cors = require('cors')
+const { response } = require('express')
 
-const registerRouter=require('./routers/register')
-const companyRouter=require('./routers/company')
-const workerRouter=require('./routers/worker')
-const experienceRouter=require('./routers/experience')
-const portofolioRouter=require('./routers/portofolio')
-const projectRouter=require('./routers/project')
-const projectmanRouter=require('./routers/projectman')
-const getprojectRouter=require('./routers/getproject')
-const skillRouter=require('./routers/skill')
+const registerRouter = require('./routers/register')
+const companyRouter = require('./routers/company')
+const workerRouter = require('./routers/worker')
+const experienceRouter = require('./routers/experience')
+const portofolioRouter = require('./routers/portofolio')
+const projectRouter = require('./routers/project')
+const projectmanRouter = require('./routers/projectman')
+const getprojectRouter = require('./routers/getproject')
+const skillRouter = require('./routers/skill')
 
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use('/regis', registerRouter)
+app.use('/company', companyRouter)
+app.use('/worker', workerRouter)
+app.use('/experience', experienceRouter)
+app.use('/portofolio', portofolioRouter)
+app.use('/projectman', projectmanRouter)
+app.use('/project', projectRouter)
+app.use('/getproject', getprojectRouter)
+app.use('/skill', skillRouter)
 
-app.use(bodyParser.urlencoded({extended:false}))
-app.use('/regis',registerRouter)
-app.use('/company',companyRouter)
-app.use('/worker',workerRouter)
-app.use('/experience',experienceRouter)
-app.use('/portofolio',portofolioRouter)
-app.use('/projectman',projectmanRouter)
-app.use('/project',projectRouter)
-app.use('/getproject',getprojectRouter)
-app.use('/skill',skillRouter)
+app.use(cors())
 
-app.get('/',(request,response)=>{
-response.send('Android 1 Backend')
-
+app.use((request, response, next) => {
+  response.header('Access-Control-Allow-Origin', '*')
+  response.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization')
+  next()
 })
 
+app.get('/', (request, response) => {
+  response.send('Android 1 Backend')
+})
 
-
-    app.listen(8080,()=>{
-        console.log('App Listen on Port 8080!')
-        
-        })
+app.listen(process.env.PORT, () => {
+  console.log(`App Listen on Port ${process.env.PORT}!`)
+})

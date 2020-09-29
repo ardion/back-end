@@ -1,49 +1,107 @@
 const {
   getDataRegisterByIDModel,
-  createRegisterModel,
   getDataRegisterModel,
-  updateRegisterModel, patchRegisterModel, deleteRegisterModel
+  updateRegisterModel, patchRegisterModel, deleteRegisterModel, postUserModel, checkUserModel
 } = require('../models/register')
 
-module.exports = {
-  createRegister: (req, res) => {
-    const { name, email, pasword, number_phone } = req.body
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+require('dotenv')
 
-    if (name, email, pasword, number_phone) {
-      createRegisterModel([name, email, pasword, number_phone], result => {
-        console.log(result)
-        res.status(201).send({
-          success: true,
-          message: 'Project Has Been Created',
-          data: req.body
-        })
+module.exports = {
+
+  registerUser: async (request, response) => {
+    const { name, email, password, number_phone } = request.body
+    const salt = bcrypt.genSaltSync(10)
+    const encryptPassword = bcrypt.hashSync(password, salt)
+    // Pengkondisian untuk mengecheck Email
+    const setData = {
+      name,
+      email,
+      password: encryptPassword,
+      number_phone,
+      user_role: 1,
+      user_status: 0,
+      created_at: new Date()
+    }
+
+    try {
+      const result = await postUserModel(setData)
+      console.log(result)
+      response.send({
+        success: true,
+        message: 'Succes Register User!',
+        data: result
       })
-    } else {
-      res.status(500).send({
+    } catch (error) {
+      console.log(error)
+      response.status(400).send({
         success: false,
-        message: 'All field must be filled'
+        message: 'Bad Request'
       })
     }
   },
 
-  getDataRegisterByID: (req, res) => {
-    const { id } = req.params
-    getDataRegisterByIDModel(id, result => {
-      if (result.length) {
-        res.send({
-          success: true,
-          message: `Data project id${id}`,
-          data: result[0]
-        })
+  loginUser: async (request, response) => {
+    try {
+      const { email, password } = request.body
+      const checkDataUser = await checkUserModel(email)
+      if (checkDataUser.length >= 1) {
+        const checkPassword = bcrypt.compareSync(password, checkDataUser[0].password)
+        if (checkPassword) {
+          const { id_user, name, email, user_role, user_status } = checkDataUser[0]
+          let payload = {
+            id_user,
+            name,
+            email,
+            user_role,
+            user_status
+          }
+          const token = jwt.sign(payload, process.env.jwtkey, { expiresIn: '1h' })
+          payload = { ...payload, token }
+          response.send({
+            success: true,
+            message: 'Succes Login!',
+            data: payload
+          })
+        } else {
+          response.status(400).send({
+            success: false,
+            message: 'Wrong Password!'
+          })
+        }
       } else {
-        res.send({
+        response.status(400).send({
           success: false,
-          message: `Data project id${id} not found`
+          message: 'Email/Account not registered!'
         })
       }
-    })
+    } catch (error) {
+      console.log(error)
+      response.status(400).send({
+        success: false,
+        message: 'Bad Request'
+      })
+    }
   },
-  getDataRegister: (req, res) => {
+
+  getDataRegisterByID: async (req, res) => {
+    const { id } = req.params
+    try {
+      const result = await getDataRegisterByIDModel(id)
+      res.send({
+        success: true,
+        message: `Data project id${id}`,
+        data: result[0]
+      })
+    } catch (error) {
+      res.send({
+        success: false,
+        message: `Data project id${id} not found`
+      })
+    }
+  },
+  getDataRegister: async (req, res) => {
     let { page, limit, search } = req.query
     let searchKey = ''
     let searchValue = ''
@@ -69,7 +127,8 @@ module.exports = {
 
     const offset = (page - 1) * limit
 
-    getDataRegisterModel(searchKey, searchValue, limit, offset, result => {
+    try {
+      const result = await getDataRegisterModel(searchKey, searchValue, limit, offset)
       if (result.length) {
         res.send({
           success: true,
@@ -78,18 +137,26 @@ module.exports = {
         })
       } else {
         res.send({
-          success: true,
+          success: false,
           message: 'There is no item list'
         })
       }
-    })
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
+        success: false,
+        message: 'Bad Request'
+      })
+    }
   },
 
-  updateRegister: (req, res) => {
+  updateRegister: async (req, res) => {
     const idProject = req.params.id
-    const { name, email, pasword, number_phone } = req.body
-    if (name.trim(), email.trim(), pasword.trim(), number_phone.trim()) {
-      updateRegisterModel([name, email, pasword, number_phone], idProject, result => {
+    const { name, email, password, number_phone } = req.body
+
+    try {
+      if (name.trim() && email.trim() && password.trim() && number_phone.trim()) {
+        const result = await updateRegisterModel([name, email, password, number_phone], idProject)
         console.log(result)
         if (result.affectedRows) {
           res.send({
@@ -102,73 +169,84 @@ module.exports = {
             messages: 'Field must be filled'
           })
         }
-      })
-    } else {
-      res.send({
+      } else {
+        res.send({
+          success: false,
+          messages: 'Error'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
         success: false,
-        messages: 'error!'
+        message: 'Bad Request'
       })
     }
   },
 
-  patchRegister: (req, res) => {
+  patchRegister: async (req, res) => {
     const idProject = req.params.id
-    const { name = '', email = '', pasword = '', number_phone = '' } = req.body
-    // console.log(req.body)
-    if (name.trim() || email.trim() || pasword.trim() || number_phone.trim()) {
-      getDataRegisterByIDModel(idProject, result => {
+    const { name = '', email = '', password = '', number_phone = '' } = req.body
+    try {
+      if (name.trim() || email.trim() || password.trim() || number_phone.trim()) {
+        const result = await getDataRegisterByIDModel(idProject)
         const data = Object.entries(req.body).map(item => {
           console.log(item)
           return parseInt(item[1]) > 0 ? `${item[0]}=${item[1]}` : `${item[0]}='${item[1]}'`
         })
         if (result.length) {
-          patchRegisterModel(data, idProject, result => {
-            if (result.affectedRows) {
-              res.send({
-                success: true,
-                messages: `Project With id ${idProject} has been Updated`
-              })
-            } else {
-              res.send({
-                success: false,
-                messages: 'Failed to Update'
-              })
-            }
-          })
+          const result2 = await patchRegisterModel(data, idProject)
+          if (result2.affectedRows) {
+            res.send({
+              success: true,
+              messages: `Project With id ${idProject} has been Updated`
+            })
+          } else {
+            res.send({
+              success: false,
+              messages: 'Failed to Update'
+            })
+          }
         } else {
           res.send({
             success: false,
             messages: 'Data Project Not Found'
           })
         }
-      })
-    } else {
-      res.send({
+      } else {
+        res.send({
+          success: false,
+          messages: 'Error'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
         success: false,
-        message: 'ERROR!'
+        message: 'Bad Request'
       })
     }
   },
 
-  deleteRegister: (req, res) => {
+  deleteRegister: async (req, res) => {
     const id_project = req.params.id
-    getDataRegisterByIDModel(id_project, result => {
+    try {
+      const result = await getDataRegisterByIDModel(id_project)
       if (result.length) {
-        deleteRegisterModel(id_project, result => {
-          if (result.affectedRows) {
-            res.send({
-              success: true,
-              message: `item project id ${id_project} has been deleted`
+        const result2 = await deleteRegisterModel(id_project)
+        if (result2.affectedRows) {
+          res.send({
+            success: true,
+            message: `item project id ${id_project} has been deleted`
 
-            })
-          } else {
-            res.send({
-              success: false,
-              message: 'Failed to deleted!'
+          })
+        } else {
+          res.send({
+            success: false,
+            message: 'Failed to deleted!'
 
-            })
-          }
-        })
+          })
+        }
       } else {
         res.send({
           success: false,
@@ -176,7 +254,12 @@ module.exports = {
 
         })
       }
-    })
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
+        success: false,
+        message: 'Bad Request'
+      })
+    }
   }
-
 }

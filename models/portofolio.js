@@ -1,13 +1,18 @@
 const db = require('../helper/db')
 module.exports = {
 
-  createPortofolioModel: (arr, cb) => {
-    console.log(arr.length)
-    const query = `INSERT INTO table_portofolio (id_worker, name_aplication, link_repository, type_repository, type_portofolio, picture)VALUES(${arr[0]},'${arr[1]}','${arr[2]}','${arr[3]}','${arr[4]}','${arr[5]}')`
-
-    db.query(query, (err, result, field) => {
-      console.log(err)
-      cb(result)
+  createPortofolioModel: (setData) => {  
+    console.log(setData)
+    return new Promise((resolve, reject) => {
+      const query = 'INSERT INTO table_portofolio SET ?'
+      db.query(query, setData, (err, result, field) => {
+        console.log(err)
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
     })
   },
 

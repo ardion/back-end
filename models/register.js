@@ -1,59 +1,99 @@
 const db = require('../helper/db')
 module.exports = {
 
-  createRegisterModel: (arr, cb) => {
-    const query = `INSERT INTO table_user (name, email, pasword, number_phone)VALUES('${arr[0]}','${arr[1]}','${arr[2]}',${arr[3]})`
-    console.log(arr)
-    db.query(query, (err, result, field) => {
-      console.log(err)
-      cb(result)
+  postUserModel: (setData) => {
+    return new Promise((resolve, reject) => {
+      db.query('INSERT INTO table_user SET ?', setData, (error, result) => {
+        if (!error) {
+          const newResult = {
+            id: result.insertId,
+            ...setData
+          }
+          delete newResult.password
+          resolve(newResult)
+        } else {
+          reject(new Error(error))
+        }
+      })
     })
   },
 
-  getDataRegisterByIDModel: (id, cb) => {
-    db.query(`SELECT*FROM table_user WHERE id_user=${id}`, (err, result, field) => {
-      console.log(err)
-
-      cb(result)
+  checkUserModel: (email) => {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT id_user, email, password, name, user_role, user_status FROM table_user WHERE email = ?', email, (error, result) => {
+        console.log(error)
+        if (!error) {
+          resolve(result)
+        } else {
+          reject(new Error(error))
+        }
+      })
     })
   },
 
-  getDataRegisterModel: (searchKey, searchValue, limit, offset, cb) => {
-    console.log(searchValue)
-    db.query(`SELECT * FROM table_user WHERE ${searchKey} LIKE '%${searchValue}%' LIMIT ${limit} OFFSET ${offset}`, (err, result, field) => {
-      if (!err) {
-        cb(result)
-      }else {
-        res.send({
-          success: false,
-          message: 'Internal error' + err
-        })
-      }
+  getDataRegisterByIDModel: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT*FROM table_user WHERE id_user=${id}`, (err, result, field) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
     })
   },
 
-  updateRegisterModel: (arr, idProject, callback) => {
-    db.query(`SELECT * FROM table_user WHERE id_user = ${idProject}`, (_err, result, _field) => {
-      if (result.length) {
-        db.query(`UPDATE table_user SET name='${arr[0]}', email='${arr[1]}', pasword='${arr[2]}', number_phone='${arr[3]}'
+  getDataRegisterModel: (searchKey, searchValue, limit, offset) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * FROM table_user WHERE ${searchKey} LIKE '%${searchValue}%' LIMIT ${limit} OFFSET ${offset}`, (err, result, field) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
+    })
+  },
+
+  updateRegisterModel: (arr, idProject) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * FROM table_user WHERE id_user = ${idProject}`, (_err, result, _field) => {
+        if (result.length) {
+          db.query(`UPDATE table_user SET name='${arr[0]}', email='${arr[1]}', password='${arr[2]}', number_phone='${arr[3]}'
          WHERE id_user = ${idProject}`, (_err, result, _fields) => {
-          callback(result)
-        })
-      }
+            if (!_err) {
+              resolve(result)
+            } else {
+              reject(new Error(_err))
+            }
+          })
+        }
+      })
     })
   },
 
-  patchRegisterModel: (data, idProject, callback) => {
-    var query = `UPDATE table_user SET ${data} WHERE id_user = ${idProject}`
-    db.query(query, (_err, result, _field) => {
-      callback(result)
+  patchRegisterModel: (data, idProject) => {
+    return new Promise((resolve, reject) => {
+      var query = `UPDATE table_user SET ${data} WHERE id_user = ${idProject}`
+      db.query(query, (_err, result, _field) => {
+        if (!_err) {
+          resolve(result)
+        } else {
+          reject(new Error(_err))
+        }
+      })
     })
   },
 
-  deleteRegisterModel: (idProject, callback) => {
-    db.query(`DELETE FROM table_user WHERE id_user=${idProject}`, (err, result, field) => {
-      callback(result)
+  deleteRegisterModel: (idProject) => {
+    return new Promise((resolve, reject) => {
+      db.query(`DELETE FROM table_user WHERE id_user=${idProject}`, (err, result, field) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
     })
   }
-
 }

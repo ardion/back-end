@@ -2,12 +2,16 @@ const { query } = require('express')
 const db = require('../helper/db')
 module.exports = {
 
-  createWorkerModel: (arr, cb) => {
-    const query = `INSERT INTO table_worker (id_user, jobdesk, domicile, workplace, description_personal, job_status,instagram, github, gitlab)VALUES(${arr[0]},'${arr[1]}','${arr[2]}','${arr[3]}','${arr[4]}','${arr[5]}','${arr[6]}','${arr[7]}','${arr[8]}')`
-    console.log(arr)
-    db.query(query, (err, result, field) => {
-      console.log(err)
-      cb(result)
+  createWorkerModel: (setData) => {
+    return new Promise((resolve, reject) => {
+      const query = 'INSERT INTO table_worker SET ?'
+      db.query(query, setData, (err, result, field) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
     })
   },
 
@@ -58,7 +62,7 @@ module.exports = {
     })
   },
 
-  //getdataworkerskillmodel itu untuk cari dan order berdasarkan nama, skill, place, dan status kerja dengan dinamis kak
+  // getdataworkerskillmodel itu untuk cari dan order berdasarkan nama, skill, place, dan status kerja dengan dinamis kak
 
   getDataWorkerskillModel: (searchKey, searchValue, limit, offset, order, sort, cb) => {
     let sortWorker = ''
@@ -73,7 +77,7 @@ module.exports = {
     console.log(order)
     console.log(sortWorker)
 
-    const qq=`select table_user.name,table_worker.workplace,table_skill.skill
+    const qq = `select table_user.name,table_worker.workplace,table_skill.skill
     from table_user JOIN table_worker USING(id_user)
     JOIN table_skill on table_worker.id_worker=table_skill.id_worker
     WHERE  ${searchKey} LIKE '%${searchValue}%' ${sortWorker} `
