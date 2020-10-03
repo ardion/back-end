@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 29 Sep 2020 pada 03.22
+-- Waktu pembuatan: 03 Okt 2020 pada 11.43
 -- Versi server: 10.4.14-MariaDB
 -- Versi PHP: 7.4.10
 
@@ -36,8 +36,16 @@ CREATE TABLE `table_company` (
   `company_description` text NOT NULL,
   `instagram` varchar(20) NOT NULL,
   `position` varchar(20) NOT NULL,
-  `linkedID` varchar(20) NOT NULL
+  `linkedID` varchar(20) NOT NULL,
+  `image` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `table_company`
+--
+
+INSERT INTO `table_company` (`id_company`, `id_user`, `company_name`, `scope`, `city`, `company_description`, `instagram`, `position`, `linkedID`, `image`) VALUES
+(16, 58, 'coba', 'fszdffg', 'dfg', 'dfg', 'dfdgdh', 'fdgh', 'gh', 'image-1601674235488-5e8854efa6292.jpeg');
 
 -- --------------------------------------------------------
 
@@ -53,6 +61,13 @@ CREATE TABLE `table_experience` (
   `description_work` text NOT NULL,
   `date` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `table_experience`
+--
+
+INSERT INTO `table_experience` (`id_experience`, `id_worker`, `position`, `company_name`, `description_work`, `date`) VALUES
+(8, 30, 'a', 'b', 'd', 'coba');
 
 -- --------------------------------------------------------
 
@@ -79,7 +94,7 @@ INSERT INTO `table_portofolio` (`id_portofolio`, `id_worker`, `name_aplication`,
 (5, 29, 'a', 'b', 'c', 'd', ''),
 (6, 29, 'a', 'b', 'c', 'd', ''),
 (7, 29, 'a', 'b', 'c', 'd', ''),
-(8, 29, 'a', 'b', 'c', 'd', 'image-1601322398824-WhatsApp Image 2020-09-22 at 12.13.54.jpeg');
+(8, 29, 'aaa', 'bb', 'cc', 'dd', 'image-1601664533064-bg03.png');
 
 -- --------------------------------------------------------
 
@@ -94,6 +109,13 @@ CREATE TABLE `table_project` (
   `description_project` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data untuk tabel `table_project`
+--
+
+INSERT INTO `table_project` (`id_project`, `id_company`, `name_project`, `description_project`) VALUES
+(5, 16, 'aaa', 'baa');
+
 -- --------------------------------------------------------
 
 --
@@ -105,6 +127,13 @@ CREATE TABLE `table_projectman` (
   `id_project` int(11) NOT NULL,
   `id_worker` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `table_projectman`
+--
+
+INSERT INTO `table_projectman` (`order_worker`, `id_project`, `id_worker`) VALUES
+(4, 5, 30);
 
 -- --------------------------------------------------------
 
@@ -123,10 +152,10 @@ CREATE TABLE `table_skill` (
 --
 
 INSERT INTO `table_skill` (`id_skill`, `id_worker`, `skill`) VALUES
-(17, 17, 'R'),
-(18, 17, 'c++'),
 (19, 18, 'R'),
-(20, 18, 'py');
+(20, 18, 'py'),
+(21, 30, 'php'),
+(22, 30, 'R');
 
 -- --------------------------------------------------------
 
@@ -180,7 +209,6 @@ CREATE TABLE `table_worker` (
 --
 
 INSERT INTO `table_worker` (`id_worker`, `id_user`, `jobdesk`, `domicile`, `workplace`, `description_personal`, `job_status`, `instagram`, `github`, `gitlab`, `image`) VALUES
-(17, 56, 'c', 'cdomicili', 'cplace', 'cdes', 'cstatus', 'cig', 'cgithub', 'cgitlab', NULL),
 (18, 57, 'd', 'ddomicili', 'dplace', 'ddes', 'dstatus', 'dig', 'dgithub', 'dgitlab', NULL),
 (19, 57, 'd', 'ddomicili', 'dplace', 'ddes', 'dstatus', 'dig', 'dgithub', 'dgitlab', ''),
 (23, 58, 'd', 'ddomicili', 'dplace', 'ddes', 'dstatus', 'dig', 'dgithub', 'dgitlab', ''),
@@ -189,7 +217,8 @@ INSERT INTO `table_worker` (`id_worker`, `id_user`, `jobdesk`, `domicile`, `work
 (26, 58, 'd', 'ddomicili', 'dplace', 'ddes', 'dstatus', 'dig', 'dgithub', 'dgitlab', ''),
 (27, 58, 'd', 'ddomicili', 'dplace', 'ddes', 'dstatus', 'dig', 'dgithub', 'dgitlab', ''),
 (28, 58, 'd', 'ddomicili', 'dplace', 'ddes', 'dstatus', 'dig', 'dgithub', 'dgitlab', 'image-1601320087489-WhatsApp Image 2020-09-22 at 12.13.54.jpeg'),
-(29, 58, 'd', 'ddomicili', 'dplace', 'ddes', 'dstatus', 'dig', 'dgithub', 'dgitlab', 'image-1601321927203-WhatsApp Image 2020-09-22 at 12.13.54.jpeg');
+(29, 58, 'e', 'ddomicili', 'dplace', 'ddes', 'dstatus', 'dig', 'dgithub', 'dgitlab', 'image-1601629613967-B4E3B105-052B-448A-BC70-F93A32360D0D.jpeg'),
+(30, 58, 'aa', 'bb', 'cc', 'hh', 'dd', 'ee', 'ff', 'gg', 'image-1601486151769-bg03.png');
 
 --
 -- Indexes for dumped tables
@@ -259,37 +288,37 @@ ALTER TABLE `table_worker`
 -- AUTO_INCREMENT untuk tabel `table_company`
 --
 ALTER TABLE `table_company`
-  MODIFY `id_company` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id_company` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT untuk tabel `table_experience`
 --
 ALTER TABLE `table_experience`
-  MODIFY `id_experience` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_experience` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT untuk tabel `table_portofolio`
 --
 ALTER TABLE `table_portofolio`
-  MODIFY `id_portofolio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_portofolio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT untuk tabel `table_project`
 --
 ALTER TABLE `table_project`
-  MODIFY `id_project` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_project` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT untuk tabel `table_projectman`
 --
 ALTER TABLE `table_projectman`
-  MODIFY `order_worker` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `order_worker` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `table_skill`
 --
 ALTER TABLE `table_skill`
-  MODIFY `id_skill` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id_skill` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT untuk tabel `table_user`
@@ -301,7 +330,7 @@ ALTER TABLE `table_user`
 -- AUTO_INCREMENT untuk tabel `table_worker`
 --
 ALTER TABLE `table_worker`
-  MODIFY `id_worker` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id_worker` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)

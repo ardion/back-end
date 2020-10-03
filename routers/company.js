@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const { getDataCompanyByID, createCompany, getDataCompany, updateCompany, patchCompany, deleteCompany } = require('../controler/Company')
+const { getDataCompanyByID, createCompany, getDataCompany, updateCompany, patchCompany, deleteCompany } = require('../controler/company')
 const router = Router()
 const {authorization}=require('../middleware/auth')
 const uploadImage=require('../middleware/multer')
