@@ -3,7 +3,7 @@ const {
   createProjectModel,
   getDataProjectModel,
   updateProjectModel, patchProjectModel, deleteProjectModel
-} = require('../models/Project')
+} = require('../models/project')
 
 module.exports = {
   createProject: async (req, res) => {

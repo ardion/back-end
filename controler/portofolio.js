@@ -3,7 +3,7 @@ const {
   createPortofolioModel,
   getDataPortofolioModel,
   updatePortofolioModel, patchPortofolioModel, deletePortofolioModel
-} = require('../models/Portofolio')
+} = require('../models/portofolio')
 
 module.exports = {
 

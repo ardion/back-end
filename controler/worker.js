@@ -3,7 +3,7 @@ const {
   createWorkerModel,
   getDataWorkerModel,
   updateWorkerModel, patchWorkerModel, deleteWorkerModel, getDataWorkerskillModel
-} = require('../models/Worker')
+} = require('../models/worker')
 
 module.exports = {
   createWorker: async (req, res) => {

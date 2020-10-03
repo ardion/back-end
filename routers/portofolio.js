@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const { getDataPortofolioByID, createPortofolio, getDataPortofolio, updatePortofolio, patchPortofolio, deletePortofolio } = require('../controler/Portofolio')
+const { getDataPortofolioByID, createPortofolio, getDataPortofolio, updatePortofolio, patchPortofolio, deletePortofolio } = require('../controler/portofolio')
 const router = Router()
 const { authorization } = require('../middleware/auth')
 const uploadImage = require('../middleware/multer')

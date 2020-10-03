@@ -3,7 +3,7 @@ const {
   createSkillModel,
   getDataSkillModel,
   updateSkillModel, patchSkillModel, deleteSkillModel
-} = require('../models/Skill')
+} = require('../models/skill')
 
 module.exports = {
   createSkill: async (req, res) => {

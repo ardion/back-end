@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const { getDataProjectByID, createProject, getDataProject, updateProject, patchProject, deleteProject } = require('../controler/Project')
+const { getDataProjectByID, createProject, getDataProject, updateProject, patchProject, deleteProject } = require('../controler/project')
 const router = Router()
 const {authorization}=require('../middleware/auth')
 

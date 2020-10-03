@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const { getDataWorkerByID, createWorker, updateWorker, patchWorker, deleteWorker, getDataWorkerSkill, getDataWorker } = require('../controler/Worker')
+const { getDataWorkerByID, createWorker, updateWorker, patchWorker, deleteWorker, getDataWorkerSkill, getDataWorker } = require('../controler/worker')
 const router = Router()
 const {authorization}=require('../middleware/auth')
 const uploadImage=require('../middleware/multer')

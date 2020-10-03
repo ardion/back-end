@@ -3,7 +3,7 @@ const {
   createProjectmanModel,
   getDataProjectmanModel,
   updateProjectmanModel, patchProjectmanModel, deleteProjectmanModel
-} = require('../models/Projectman')
+} = require('../models/projectman')
 
 module.exports = {
   createProjectman: async (req, res) => {
