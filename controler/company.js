@@ -3,7 +3,7 @@ const {
   createCompanyModel,
   getDataCompanyModel,
   updateCompanyModel, patchCompanyModel, deleteCompanyModel
-} = require('../models/Company')
+} = require('../models/company')
 
 module.exports = {
   createCompany: async (req, res) => {
