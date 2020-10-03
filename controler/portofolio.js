@@ -45,25 +45,24 @@ module.exports = {
       })
     }
   },
-
-  getDataPortofolioByID: (req, res) => {
+  getDataPortofolioByID: async (req, res) => {
     const { id } = req.params
-    getDataPortofolioByIDModel(id, result => {
-      if (result.length) {
-        res.send({
-          success: true,
-          message: `Data project id${id}`,
-          data: result[0]
-        })
-      } else {
-        res.send({
-          success: false,
-          message: `Data project id${id} not found`
-        })
-      }
-    })
+    try {
+      const result = await getDataPortofolioByIDModel(id)
+      res.send({
+        success: true,
+        message: `Data project id${id}`,
+        data: result[0]
+      })
+    } catch (error) {
+      res.send({
+        success: false,
+        message: `Data project id${id} not found`
+      })
+    }
   },
-  getDataPortofolio: (req, res) => {
+
+  getDataPortofolio: async (req, res) => {
     let { page, limit, search } = req.query
     let searchKey = ''
     let searchValue = ''
@@ -89,27 +88,44 @@ module.exports = {
 
     const offset = (page - 1) * limit
 
-    getDataPortofolioModel(searchKey, searchValue, limit, offset, result => {
+    try {
+      const result = await getDataPortofolioModel(searchKey, searchValue, limit, offset)
       if (result.length) {
         res.send({
           success: true,
-          message: 'List project',
+          message: 'List portofolio',
           data: result
         })
       } else {
         res.send({
-          success: true,
+          success: false,
           message: 'There is no item list'
         })
       }
-    })
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
+        success: false,
+        message: 'Bad Request'
+      })
+    }
   },
 
-  updatePortofolio: (req, res) => {
+  updatePortofolio: async (req, res) => {
     const idProject = req.params.id
-    const { id_worker, name_aplication, link_repository, type_repository, type_portofolio, picture } = req.body
-    if (id_worker.trim(), name_aplication.trim(), link_repository.trim(), type_repository.trim(), type_portofolio.trim(), picture.trim()) {
-      updatePortofolioModel([id_worker, name_aplication, link_repository, type_repository, type_portofolio, picture], idProject, result => {
+    const { id_worker, name_aplication, link_repository, type_repository, type_portofolio } = req.body
+    const image = req.file === undefined ? '' : req.file.filename
+
+    console.log(req.file)
+    console.log(req.body)
+    try {
+      if (id_worker.trim() &&
+      name_aplication.trim() &&
+      link_repository.trim() &&
+      type_repository.trim() &&
+      type_portofolio.trim() &&
+      image.trim()) {
+        const result = await updatePortofolioModel([id_worker, name_aplication, link_repository, type_repository, type_portofolio, image], idProject)
         console.log(result)
         if (result.affectedRows) {
           res.send({
@@ -122,81 +138,101 @@ module.exports = {
             messages: 'Field must be filled'
           })
         }
-      })
-    } else {
-      res.send({
+      } else {
+        res.send({
+          success: false,
+          messages: 'error!'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
         success: false,
-        messages: 'error!'
+        message: 'Bad Request'
       })
     }
   },
-
-  patchPortofolio: (req, res) => {
+  patchPortofolio: async (req, res) => {
     const idProject = req.params.id
-    const { id_worker = '', name_aplication = '', link_repository = '', type_repository = '', type_portofolio = '', picture = '' } = req.body
-    // console.log(req.body)
-    if (id_worker.trim() || name_aplication.trim() || link_repository.trim() || type_repository.trim() || type_portofolio.trim() || picture.trim()) {
-      getDataPortofolioByIDModel(idProject, result => {
+    const { id_worker = '', name_aplication = '', link_repository = '', type_repository = '', type_portofolio = ''} = req.body
+    const image = req.file === undefined ? '' : req.file.filename
+    console.log(req.body)
+    console.log(req.file)
+    try {
+      if (id_worker.trim() || name_aplication.trim() || link_repository.trim() || type_repository.trim() || type_portofolio.trim() || image.trim()) {
+        const result = await getDataPortofolioByIDModel(idProject)
+
         const data = Object.entries(req.body).map(item => {
           console.log(item)
           return parseInt(item[1]) > 0 ? `${item[0]}=${item[1]}` : `${item[0]}='${item[1]}'`
         })
         if (result.length) {
-          patchPortofolioModel(data, idProject, result => {
-            if (result.affectedRows) {
-              res.send({
-                success: true,
-                messages: `Project With id ${idProject} has been Updated`
-              })
-            } else {
-              res.send({
-                success: false,
-                messages: 'Failed to Update'
-              })
-            }
-          })
+          const result2 = await patchPortofolioModel(data, idProject, image)
+
+          if (result2.affectedRows) {
+            res.send({
+              success: true,
+              messages: `Project With id ${idProject} has been Updated`
+            })
+          } else {
+            res.send({
+              success: false,
+              messages: 'Failed to Update'
+            })
+          }
         } else {
           res.send({
             success: false,
             messages: 'Data Project Not Found'
           })
         }
-      })
-    } else {
-      res.send({
+      } else {
+        res.send({
+          success: false,
+          message: 'ERROR!'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
         success: false,
-        message: 'ERROR!'
+        message: 'Bad Request'
       })
     }
   },
 
-  deletePortofolio: (req, res) => {
+  deletePortofolio: async (req, res) => {
     const id_project = req.params.id
-    getDataPortofolioByIDModel(id_project, result => {
+    try {
+      const result = await getDataPortofolioByIDModel(id_project)
       if (result.length) {
-        deletePortofolioModel(id_project, result => {
-          if (result.affectedRows) {
-            res.send({
-              success: true,
-              message: `item project id ${id_project} has been deleted`
+        const result2 = await deletePortofolioModel(id_project)
+        if (result2.affectedRows) {
+          res.send({
+            success: true,
+            message: `item project id ${id_project} has been deleted`
 
-            })
-          } else {
-            res.send({
-              success: false,
-              message: 'Failed to deleted!'
+          })
+        } else {
+          res.send({
+            success: false,
+            message: 'Failed to deleted!'
 
-            })
-          }
-        })
+          })
+        }
       } else {
         res.send({
           success: false,
           message: 'Data project not found!'
-
         })
       }
-    })
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
+        success: false,
+        message: 'Bad Request'
+      })
+    }
   }
 
 }

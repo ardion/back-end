@@ -132,7 +132,7 @@ module.exports = {
       if (result.length) {
         res.send({
           success: true,
-          message: 'List project',
+          message: 'List user',
           data: result
         })
       } else {

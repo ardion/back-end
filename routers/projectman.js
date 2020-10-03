@@ -1,13 +1,14 @@
 const { Router } = require('express')
 const { getDataProjectmanByID, createProjectman, getDataProjectman, updateProjectman, patchProjectman, deleteProjectman } = require('../controler/Projectman')
 const router = Router()
+const {authorization}=require('../middleware/auth')
 
-router.post('/', createProjectman)
+router.post('/',authorization, createProjectman)
 
 router.get('/:id', getDataProjectmanByID)
 router.get('/', getDataProjectman)
-router.put('/:id', updateProjectman)
-router.patch('/:id', patchProjectman)
-router.delete('/:id', deleteProjectman)
+router.put('/:id',authorization, updateProjectman)
+router.patch('/:id', authorization,patchProjectman)
+router.delete('/:id',authorization, deleteProjectman)
 
 module.exports = router

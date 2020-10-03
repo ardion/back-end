@@ -15,77 +15,101 @@ module.exports = {
     })
   },
 
-  getDataWorkerByIDModel: (id, cb) => {
-    db.query(`SELECT*FROM table_worker WHERE id_worker=${id}`, (err, result, field) => {
-      console.log(err)
-
-      cb(result)
+  getDataWorkerByIDModel: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT*FROM table_worker WHERE id_worker=${id}`, (err, result, field) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
+    })
+  },
+  getDataWorkerModel: (searchKey, searchValue, limit, offset) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * FROM table_worker WHERE ${searchKey} LIKE '%${searchValue}%' LIMIT ${limit} OFFSET ${offset}`, (err, result, field) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
     })
   },
 
-  getDataWorkerModel: (searchKey, searchValue, limit, offset, cb) => {
-    console.log(searchValue)
-    db.query(`SELECT * FROM table_worker WHERE ${searchKey} LIKE '%${searchValue}%' LIMIT ${limit} OFFSET ${offset}`, (err, result, field) => {
-      if (!err) {
-        cb(result)
-      } else {
-        res.send({
-          success: false,
-          message: 'Internal error' + err
-        })
-      }
-    })
-  },
-
-  updateWorkerModel: (arr, idProject, callback) => {
-    db.query(`SELECT * FROM table_worker WHERE id_worker = ${idProject}`, (_err, result, _field) => {
-      if (result.length) {
+  updateWorkerModel: (arr, idProject) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * FROM table_worker WHERE id_worker = ${idProject}`, (_err, result, _field) => {
+        if (result.length) {
         // id_user, jobdesk, domicile, workplace, description_personal, job_status,instagram, github, gitlab
-        db.query(`UPDATE table_worker SET id_user ='${arr[0]}', jobdesk='${arr[1]}', domicile='${arr[2]}', workplace='${arr[3]}',description_personal='${arr[4]}', job_status='${arr[5]}', instagram='${arr[6]}', github='${arr[7]}', gitlab='${arr[8]}'
+          db.query(`UPDATE table_worker SET id_user ='${arr[0]}', jobdesk='${arr[1]}', domicile='${arr[2]}', workplace='${arr[3]}',description_personal='${arr[4]}', job_status='${arr[5]}', instagram='${arr[6]}', github='${arr[7]}', gitlab='${arr[8]}', image='${arr[9]}'
          WHERE id_worker = ${idProject}`, (_err, result, _fields) => {
-          callback(result)
-        })
-      }
+            if (!_err) {
+              resolve(result)
+            } else {
+              reject(new Error(_err))
+            }
+          })
+        }
+      })
     })
   },
 
-  patchWorkerModel: (data, idProject, callback) => {
-    var query = `UPDATE table_worker SET ${data} WHERE id_worker = ${idProject}`
-    db.query(query, (_err, result, _field) => {
-      callback(result)
+  patchWorkerModel: (data, idProject, image) => {
+    return new Promise((resolve, reject) => {
+      var query = `UPDATE table_worker SET ${data}, image='${image}' WHERE id_worker = ${idProject}`
+      db.query(query, (_err, result, _field) => {
+        if (!_err) {
+          resolve(result)
+        } else {
+          reject(new Error(_err))
+        }
+      })
     })
   },
 
-  deleteWorkerModel: (idProject, callback) => {
-    db.query(`DELETE FROM table_worker WHERE id_worker=${idProject}`, (err, result, field) => {
-      callback(result)
+  deleteWorkerModel: (idProject) => {
+    return new Promise((resolve, reject) => {
+      db.query(`DELETE FROM table_worker WHERE id_worker=${idProject}`, (err, result, field) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
     })
   },
 
   // getdataworkerskillmodel itu untuk cari dan order berdasarkan nama, skill, place, dan status kerja dengan dinamis kak
 
-  getDataWorkerskillModel: (searchKey, searchValue, limit, offset, order, sort, cb) => {
-    let sortWorker = ''
-    if (sort != null) {
-      if (order != null) {
-        sortWorker = `ORDER BY ${order} ${sort}`
-      } else {
-        sortWorker = 'ORDER BY name ASC'
+  getDataWorkerskillModel: (searchKey, searchValue, limit, offset, order, sort) => {
+    return new Promise((resolve, reject) => {
+      let sortWorker = ''
+      if (sort != null) {
+        if (order != null) {
+          sortWorker = `ORDER BY ${order} ${sort}`
+        } else {
+          sortWorker = 'ORDER BY name ASC'
+        }
       }
-    }
-    console.log(sort)
-    console.log(order)
-    console.log(sortWorker)
+      console.log(sort)
+      console.log(order)
+      console.log(sortWorker)
 
-    const qq = `select table_user.name,table_worker.workplace,table_skill.skill
+      const qq = `select table_user.name,table_worker.image,table_worker.workplace,table_skill.skill
     from table_user JOIN table_worker USING(id_user)
     JOIN table_skill on table_worker.id_worker=table_skill.id_worker
     WHERE  ${searchKey} LIKE '%${searchValue}%' ${sortWorker} `
 
-    db.query(qq, (err, result, field) => {
-      cb(result)
-      console.log(qq)
+      db.query(qq, (err, result, field) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+        console.log(qq)
+      })
     })
   }
-
 }

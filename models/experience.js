@@ -1,35 +1,39 @@
 const db = require('../helper/db')
 module.exports = {
 
-  createExperienceModel: (arr, cb) => {
-    console.log(arr)
-    const query = `INSERT INTO table_experience (id_worker, position, company_name, date, description_work)VALUES(${arr[0]},'${arr[1]}','${arr[2]}','${arr[3]}','${arr[4]}')`
-
-    db.query(query, (err, result, field) => {
-      console.log(err)
-      cb(result)
+  createExperienceModel: (setData) => {
+    return new Promise((resolve, reject) => {
+      db.query('INSERT INTO table_experience SET ?', setData, (err, result) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
     })
   },
 
-  getDataExperienceByIDModel: (id, cb) => {
-    db.query(`SELECT*FROM table_experience WHERE id_experience=${id}`, (err, result, field) => {
-      console.log(err)
-
-      cb(result)
+  getDataExperienceByIDModel: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT*FROM table_experience WHERE id_experience=${id}`, (err, result, field) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
     })
   },
 
-  getDataExperienceModel: (searchKey, searchValue, limit, offset, cb) => {
-    console.log(searchValue)
-    db.query(`SELECT * FROM table_experience WHERE ${searchKey} LIKE '%${searchValue}%' LIMIT ${limit} OFFSET ${offset}`, (err, result, field) => {
-      if (!err) {
-        cb(result)
-      } else {
-        res.send({
-          success: false,
-          message: 'Internal error' + err
-        })
-      }
+  getDataExperienceModel: (searchKey, searchValue, limit, offset) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * FROM table_experience WHERE ${searchKey} LIKE '%${searchValue}%' LIMIT ${limit} OFFSET ${offset}`, (err, result, field) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
     })
   },
 
@@ -44,17 +48,45 @@ module.exports = {
       }
     })
   },
-
-  patchExperienceModel: (data, idProject, callback) => {
-    var query = `UPDATE table_experience SET ${data} WHERE id_experience = ${idProject}`
-    db.query(query, (_err, result, _field) => {
-      callback(result)
+  updateExperienceModel: (arr, idProject) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * FROM table_experience WHERE id_experience = ${idProject}`, (_err, result, _field) => {
+        if (result.length) {
+          db.query(`UPDATE table_experience SET id_worker ='${arr[0]}', position='${arr[1]}', company_name='${arr[2]}', date='${arr[3]}',description_work='${arr[4]}'
+          WHERE id_experience = ${idProject}`, (_err, result, _fields) => {
+            if (!_err) {
+              resolve(result)
+            } else {
+              reject(new Error(_err))
+            }
+          })
+        }
+      })
     })
   },
 
-  deleteExperienceModel: (idProject, callback) => {
-    db.query(`DELETE FROM table_experience WHERE id_experience=${idProject}`, (err, result, field) => {
-      callback(result)
+ patchExperienceModel: (data, idProject) => {
+    return new Promise((resolve, reject) => {
+      var query = `UPDATE table_experience SET ${data} WHERE id_experience = ${idProject}`
+      db.query(query, (_err, result, _field) => {
+        if (!_err) {
+          resolve(result)
+        } else {
+          reject(new Error(_err))
+        }
+      })
+    })
+  },
+
+ deleteExperienceModel: (idProject) => {
+    return new Promise((resolve, reject) => {
+      db.query(`DELETE FROM table_experience WHERE id_experience=${idProject}`, (err, result, field) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
     })
   }
 

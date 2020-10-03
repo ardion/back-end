@@ -48,24 +48,24 @@ module.exports = {
     }
   },
 
-  getDataWorkerByID: (req, res) => {
+  getDataWorkerByID: async (req, res) => {
     const { id } = req.params
-    getDataWorkerByIDModel(id, result => {
-      if (result.length) {
-        res.send({
-          success: true,
-          message: `Data project id${id}`,
-          data: result[0]
-        })
-      } else {
-        res.send({
-          success: false,
-          message: `Data project id${id} not found`
-        })
-      }
-    })
+    try {
+      const result = await getDataWorkerByIDModel(id)
+      res.send({
+        success: true,
+        message: `Data project id${id}`,
+        data: result[0]
+      })
+    } catch (error) {
+      res.send({
+        success: false,
+        message: `Data project id${id} not found`
+      })
+    }
   },
-  getDataWorker: (req, res) => {
+
+  getDataWorker: async (req, res) => {
     let { page, limit, search } = req.query
     let searchKey = ''
     let searchValue = ''
@@ -91,27 +91,47 @@ module.exports = {
 
     const offset = (page - 1) * limit
 
-    getDataWorkerModel(searchKey, searchValue, limit, offset, result => {
+    try {
+      const result = await getDataWorkerModel(searchKey, searchValue, limit, offset)
       if (result.length) {
         res.send({
           success: true,
-          message: 'List project',
+          message: 'List worker',
           data: result
         })
       } else {
         res.send({
-          success: true,
+          success: false,
           message: 'There is no item list'
         })
       }
-    })
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
+        success: false,
+        message: 'Bad Request'
+      })
+    }
   },
 
-  updateWorker: (req, res) => {
+  updateWorker: async (req, res) => {
     const idProject = req.params.id
     const { id_user, jobdesk, domicile, workplace, description_personal, job_status, instagram, github, gitlab } = req.body
-    if (id_user.trim(), jobdesk.trim(), domicile.trim(), workplace.trim(), description_personal.trim(), job_status.trim(), instagram.trim(), github.trim(), gitlab.trim()) {
-      updateWorkerModel([id_user, jobdesk, domicile, workplace, description_personal, job_status, instagram, github, gitlab], idProject, result => {
+    const image = req.file === undefined ? '' : req.file.filename
+
+    console.log(req.body)
+    try {
+      if (id_user.trim() &&
+      jobdesk.trim() &&
+      domicile.trim() &&
+      workplace.trim() &&
+      description_personal.trim() &&
+      job_status.trim() &&
+      instagram.trim() &&
+      github.trim() &&
+      gitlab.trim() &&
+      image.trim()) {
+        const result = await updateWorkerModel([id_user, jobdesk, domicile, workplace, description_personal, job_status, instagram, github, gitlab, image], idProject)
         console.log(result)
         if (result.affectedRows) {
           res.send({
@@ -124,84 +144,105 @@ module.exports = {
             messages: 'Field must be filled'
           })
         }
-      })
-    } else {
-      res.send({
+      } else {
+        res.send({
+          success: false,
+          messages: 'error!'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
         success: false,
-        messages: 'error!'
+        message: 'Bad Request'
       })
     }
   },
 
-  patchWorker: (req, res) => {
+  patchWorker: async (req, res) => {
     const idProject = req.params.id
     const { id_user = '', jobdesk = '', domicile = '', workplace = '', description_personal = '', job_status = '', instagram = '', github = '', gitlab = '' } = req.body
-    // console.log(req.body)
-    if (id_user.trim() || jobdesk.trim() || domicile.trim() || workplace.trim() || description_personal.trim() || job_status.trim() || instagram.trim() || github.trim() || gitlab.trim()) {
-      getDataWorkerByIDModel(idProject, result => {
+    const image = req.file === undefined ? '' : req.file.filename
+    console.log(req.body)
+    console.log(req.file)
+    try {
+      if (id_user.trim() || jobdesk.trim() || domicile.trim() || workplace.trim() || description_personal.trim() || job_status.trim() || instagram.trim() || github.trim() || gitlab.trim() || image.trim()) {
+        const result = await getDataWorkerByIDModel(idProject)
+
         const data = Object.entries(req.body).map(item => {
           console.log(item)
           return parseInt(item[1]) > 0 ? `${item[0]}=${item[1]}` : `${item[0]}='${item[1]}'`
         })
         if (result.length) {
-          patchWorkerModel(data, idProject, result => {
-            if (result.affectedRows) {
-              res.send({
-                success: true,
-                messages: `Project With id ${idProject} has been Updated`
-              })
-            } else {
-              res.send({
-                success: false,
-                messages: 'Failed to Update'
-              })
-            }
-          })
+          const result2 = await patchWorkerModel(data, idProject, image)
+
+          if (result2.affectedRows) {
+            res.send({
+              success: true,
+              messages: `Project With id ${idProject} has been Updated`
+            })
+          } else {
+            res.send({
+              success: false,
+              messages: 'Failed to Update'
+            })
+          }
         } else {
           res.send({
             success: false,
             messages: 'Data Project Not Found'
           })
         }
-      })
-    } else {
-      res.send({
+      } else {
+        res.send({
+          success: false,
+          message: 'ERROR!'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
         success: false,
-        message: 'ERROR!'
+        message: 'Bad Request'
       })
     }
   },
 
-  deleteWorker: (req, res) => {
+  deleteWorker: async (req, res) => {
     const id_project = req.params.id
-    getDataWorkerByIDModel(id_project, result => {
+    try {
+      const result = await getDataWorkerByIDModel(id_project)
       if (result.length) {
-        deleteWorkerModel(id_project, result => {
-          if (result.affectedRows) {
-            res.send({
-              success: true,
-              message: `item project id ${id_project} has been deleted`
+        const result2 = await deleteWorkerModel(id_project)
+        if (result2.affectedRows) {
+          res.send({
+            success: true,
+            message: `item project id ${id_project} has been deleted`
 
-            })
-          } else {
-            res.send({
-              success: false,
-              message: 'Failed to deleted!'
+          })
+        } else {
+          res.send({
+            success: false,
+            message: 'Failed to deleted!'
 
-            })
-          }
-        })
+          })
+        }
       } else {
         res.send({
           success: false,
           message: 'Data project not found!'
-
         })
       }
-    })
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
+        success: false,
+        message: 'Bad Request'
+      })
+    }
   },
 
-  getDataWorkerSkill: (req, res) => {
+  getDataWorkerSkill: async (req, res) => {
     let { page, limit, search, sort, order } = req.query
     let searchKey = ''
     let searchValue = ''
@@ -226,8 +267,8 @@ module.exports = {
     }
 
     const offset = (page - 1) * limit
-
-    getDataWorkerskillModel(searchKey, searchValue, limit, offset, sort, order, result => {
+    try {
+      const result = await getDataWorkerskillModel(searchKey, searchValue, limit, offset, sort, order)
       if (result.length) {
         res.send({
           success: true,
@@ -240,7 +281,12 @@ module.exports = {
           message: 'There is no item list'
         })
       }
-    })
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
+        success: false,
+        message: 'Bad Request'
+      })
+    }
   }
-
 }

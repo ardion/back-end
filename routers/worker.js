@@ -6,10 +6,10 @@ const uploadImage=require('../middleware/multer')
 
 router.post('/', authorization,uploadImage,createWorker)
 
-router.get('/:id',  authorization,getDataWorkerByID)
-router.get('/t/t', authorization,getDataWorker)
-router.put('/:id', authorization, updateWorker)
-router.patch('/:id',  authorization,patchWorker)
+router.get('/:id',  getDataWorkerByID)
+router.get('/t/t', getDataWorker)
+router.put('/:id', authorization,uploadImage, updateWorker)
+router.patch('/:id',  authorization,uploadImage,patchWorker)
 router.delete('/:id',  authorization,deleteWorker)
 router.get('/',  authorization,getDataWorkerSkill)
 

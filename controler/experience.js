@@ -6,49 +6,60 @@ const {
 } = require('../models/experience')
 
 module.exports = {
-  createExperience: (req, res) => {
-    const {
-      id_worker,
-      position, company_name,
-      date,
-      description_work
-    } = req.body
-    console.log(req.body)
-    if (id_worker, position, company_name, date, description_work) {
-      createExperienceModel([id_worker, position, company_name, date, description_work], result => {
-        console.log(result)
-        res.status(201).send({
-          success: true,
-          message: 'Project Has Been Created',
-          data: req.body
-        })
+  
+createExperience: async (req, res) => {
+    try {
+      const {
+        id_worker,
+        position, company_name,
+        date,
+        description_work
+      } = req.body
+
+      const setData = {
+        id_worker,
+        position,
+        company_name,
+        date,
+        description_work
+      }
+
+      console.log(req.body)
+      // if (name && description && price && duration) {
+      const resultCreate = await  createExperienceModel(setData)
+      console.log(resultCreate)
+
+      res.status(201).send({
+        success: true,
+        message: 'Project Has Been Created',
+        data: setData
       })
-    } else {
+    } catch (error) {
+      console.log(error)
       res.status(500).send({
         success: false,
-        message: 'All field must be filled'
+        message: 'Bad Request'
       })
     }
   },
 
-  getDataExperienceByID: (req, res) => {
+  getDataExperienceByID: async (req, res) => {
     const { id } = req.params
-    getDataExperienceByIDModel(id, result => {
-      if (result.length) {
-        res.send({
-          success: true,
-          message: `Data project id${id}`,
-          data: result[0]
-        })
-      } else {
-        res.send({
-          success: false,
-          message: `Data project id${id} not found`
-        })
-      }
-    })
+    try {
+      const result = await  getDataExperienceByIDModel(id)
+      res.send({
+        success: true,
+        message: `Data project id${id}`,
+        data: result[0]
+      })
+    } catch (error) {
+      res.send({
+        success: false,
+        message: `Data project id${id} not found`
+      })
+    }
   },
-  getDataExperience: (req, res) => {
+   getDataExperience: async (req, res) => {
     let { page, limit, search } = req.query
     let searchKey = ''
     let searchValue = ''
@@ -74,27 +85,36 @@ module.exports = {
 
     const offset = (page - 1) * limit
 
-    getDataExperienceModel(searchKey, searchValue, limit, offset, result => {
+    try {
+      const result = await getDataExperienceModel(searchKey, searchValue, limit, offset)
       if (result.length) {
         res.send({
           success: true,
-          message: 'List project',
+          message: 'List Experience',
           data: result
         })
       } else {
         res.send({
-          success: true,
+          success: false,
           message: 'There is no item list'
         })
       }
-    })
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
+        success: false,
+        message: 'Bad Request'
+      })
+    }
   },
 
-  updateExperience: (req, res) => {
+updateExperience: async (req, res) => {
     const idProject = req.params.id
     const { id_worker, position, company_name, date, description_work } = req.body
-    if (id_worker.trim(), position.trim(), company_name.trim(), date.trim(), description_work.trim()) {
-      updateExperienceModel([id_worker, position, company_name, date, description_work], idProject, result => {
+
+    try {
+      if (id_worker.trim(), position.trim(), company_name.trim(), date.trim(), description_work.trim()) {
+        const result = await updateExperienceModel([id_worker, position, company_name, date, description_work], idProject)
         console.log(result)
         if (result.affectedRows) {
           res.send({
@@ -107,73 +127,84 @@ module.exports = {
             messages: 'Field must be filled'
           })
         }
-      })
-    } else {
-      res.send({
+      } else {
+        res.send({
+          success: false,
+          messages: 'Error'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
         success: false,
-        messages: 'error!'
+        message: 'Bad Request'
       })
     }
   },
 
-  patchExperience: (req, res) => {
+ patchExperience: async (req, res) => {
     const idProject = req.params.id
-    const { id_worker = '', position = '', company_name = '', date = '', description_work = '' } = req.body
-    // console.log(req.body)
-    if (id_worker.trim() || position.trim() || company_name.trim() || date.trim() || description_work.trim()) {
-      getDataExperienceByIDModel(idProject, result => {
+    const { id_worker = '', position = '', company_name = '', date = '', description_work = ''} = req.body
+    try {
+      if (id_worker.trim() || position.trim() || company_name.trim() || date.trim() || description_work.trim()) {
+        const result = await getDataExperienceByIDModel(idProject)
         const data = Object.entries(req.body).map(item => {
           console.log(item)
           return parseInt(item[1]) > 0 ? `${item[0]}=${item[1]}` : `${item[0]}='${item[1]}'`
         })
         if (result.length) {
-          patchExperienceModel(data, idProject, result => {
-            if (result.affectedRows) {
-              res.send({
-                success: true,
-                messages: `Project With id ${idProject} has been Updated`
-              })
-            } else {
-              res.send({
-                success: false,
-                messages: 'Failed to Update'
-              })
-            }
-          })
+          const result2 = await patchExperienceModel(data, idProject)
+          if (result2.affectedRows) {
+            res.send({
+              success: true,
+              messages: `Project With id ${idProject} has been Updated`
+            })
+          } else {
+            res.send({
+              success: false,
+              messages: 'Failed to Update'
+            })
+          }
         } else {
           res.send({
             success: false,
             messages: 'Data Project Not Found'
           })
         }
-      })
-    } else {
-      res.send({
+      } else {
+        res.send({
+          success: false,
+          messages: 'Error'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
         success: false,
-        message: 'ERROR!'
+        message: 'Bad Request'
       })
     }
   },
 
-  deleteExperience: (req, res) => {
+ deleteExperience: async (req, res) => {
     const id_project = req.params.id
-    getDataExperienceByIDModel(id_project, result => {
+    try {
+      const result = await getDataExperienceByIDModel(id_project)
       if (result.length) {
-        deleteExperienceModel(id_project, result => {
-          if (result.affectedRows) {
-            res.send({
-              success: true,
-              message: `item project id ${id_project} has been deleted`
+        const result2 = await deleteExperienceModel(id_project)
+        if (result2.affectedRows) {
+          res.send({
+            success: true,
+            message: `item project id ${id_project} has been deleted`
 
-            })
-          } else {
-            res.send({
-              success: false,
-              message: 'Failed to deleted!'
+          })
+        } else {
+          res.send({
+            success: false,
+            message: 'Failed to deleted!'
 
-            })
-          }
-        })
+          })
+        }
       } else {
         res.send({
           success: false,
@@ -181,7 +212,13 @@ module.exports = {
 
         })
       }
-    })
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
+        success: false,
+        message: 'Bad Request'
+      })
+    }
   }
 
 }

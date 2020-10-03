@@ -6,47 +6,56 @@ const {
 } = require('../models/Project')
 
 module.exports = {
-  createProject: (req, res) => {
-    const {
-      id_company,
-      name_project, description_project
-    } = req.body
-    console.log(req.body)
-    if (id_company, name_project, description_project) {
-      createProjectModel([id_company, name_project, description_project], result => {
-        console.log(result)
-        res.status(201).send({
-          success: true,
-          message: 'Project Has Been Created',
-          data: req.body
-        })
+  createProject: async (req, res) => {
+    try {
+      const {
+        id_company,
+        name_project,
+        description_project
+      } = req.body
+
+      const setData = {
+        id_company,
+        name_project,
+        description_project
+      }
+
+      console.log(req.body)
+      // if (name && description && price && duration) {
+      const resultCreate = await createProjectModel(setData)
+      console.log(resultCreate)
+
+      res.status(201).send({
+        success: true,
+        message: 'Project Has Been Created',
+        data: setData
       })
-    } else {
+    } catch (error) {
+      console.log(error)
       res.status(500).send({
         success: false,
-        message: 'All field must be filled'
+        message: 'Bad Request'
+      })
+    }
+  },
+  getDataProjectByID: async (req, res) => {
+    const { id } = req.params
+    try {
+      const result = await getDataProjectByIDModel(id)
+      res.send({
+        success: true,
+        message: `Data project id${id}`,
+        data: result[0]
+      })
+    } catch (error) {
+      res.send({
+        success: false,
+        message: `Data project id${id} not found`
       })
     }
   },
 
-  getDataProjectByID: (req, res) => {
-    const { id } = req.params
-    getDataProjectByIDModel(id, result => {
-      if (result.length) {
-        res.send({
-          success: true,
-          message: `Data project id${id}`,
-          data: result[0]
-        })
-      } else {
-        res.send({
-          success: false,
-          message: `Data project id${id} not found`
-        })
-      }
-    })
-  },
-  getDataProject: (req, res) => {
+  getDataProject: async (req, res) => {
     let { page, limit, search } = req.query
     let searchKey = ''
     let searchValue = ''
@@ -72,7 +81,8 @@ module.exports = {
 
     const offset = (page - 1) * limit
 
-    getDataProjectModel(searchKey, searchValue, limit, offset, result => {
+    try {
+      const result = await getDataProjectModel(searchKey, searchValue, limit, offset)
       if (result.length) {
         res.send({
           success: true,
@@ -81,18 +91,26 @@ module.exports = {
         })
       } else {
         res.send({
-          success: true,
+          success: false,
           message: 'There is no item list'
         })
       }
-    })
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
+        success: false,
+        message: 'Bad Request'
+      })
+    }
   },
 
-  updateProject: (req, res) => {
+  updateProject: async (req, res) => {
     const idProject = req.params.id
     const { id_company, name_project, description_project } = req.body
-    if (id_company.trim(), name_project.trim(), description_project.trim()) {
-      updateProjectModel([id_company, name_project, description_project], idProject, result => {
+
+    try {
+      if (id_company.trim(), name_project.trim(), description_project.trim()) {
+        const result = await updateProjectModel([id_company, name_project, description_project], idProject)
         console.log(result)
         if (result.affectedRows) {
           res.send({
@@ -105,73 +123,84 @@ module.exports = {
             messages: 'Field must be filled'
           })
         }
-      })
-    } else {
-      res.send({
+      } else {
+        res.send({
+          success: false,
+          messages: 'Error'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
         success: false,
-        messages: 'error!'
+        message: 'Bad Request'
       })
     }
   },
 
-  patchProject: (req, res) => {
+  patchProject: async (req, res) => {
     const idProject = req.params.id
     const { id_company = '', name_project = '', description_project = '' } = req.body
-    // console.log(req.body)
-    if (id_company.trim() || name_project.trim() || description_project.trim()) {
-      getDataProjectByIDModel(idProject, result => {
+    try {
+      if (id_company.trim() || name_project.trim() || description_project.trim()) {
+        const result = await getDataProjectByIDModel(idProject)
         const data = Object.entries(req.body).map(item => {
           console.log(item)
           return parseInt(item[1]) > 0 ? `${item[0]}=${item[1]}` : `${item[0]}='${item[1]}'`
         })
         if (result.length) {
-          patchProjectModel(data, idProject, result => {
-            if (result.affectedRows) {
-              res.send({
-                success: true,
-                messages: `Project With id ${idProject} has been Updated`
-              })
-            } else {
-              res.send({
-                success: false,
-                messages: 'Failed to Update'
-              })
-            }
-          })
+          const result2 = await patchProjectModel(data, idProject)
+          if (result2.affectedRows) {
+            res.send({
+              success: true,
+              messages: `Project With id ${idProject} has been Updated`
+            })
+          } else {
+            res.send({
+              success: false,
+              messages: 'Failed to Update'
+            })
+          }
         } else {
           res.send({
             success: false,
             messages: 'Data Project Not Found'
           })
         }
-      })
-    } else {
-      res.send({
+      } else {
+        res.send({
+          success: false,
+          messages: 'Error'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
         success: false,
-        message: 'ERROR!'
+        message: 'Bad Request'
       })
     }
   },
 
-  deleteProject: (req, res) => {
+  deleteProject: async (req, res) => {
     const id_project = req.params.id
-    getDataProjectByIDModel(id_project, result => {
+    try {
+      const result = await getDataProjectByIDModel(id_project)
       if (result.length) {
-        deleteProjectModel(id_project, result => {
-          if (result.affectedRows) {
-            res.send({
-              success: true,
-              message: `item project id ${id_project} has been deleted`
+        const result2 = await deleteProjectModel(id_project)
+        if (result2.affectedRows) {
+          res.send({
+            success: true,
+            message: `item project id ${id_project} has been deleted`
 
-            })
-          } else {
-            res.send({
-              success: false,
-              message: 'Failed to deleted!'
+          })
+        } else {
+          res.send({
+            success: false,
+            message: 'Failed to deleted!'
 
-            })
-          }
-        })
+          })
+        }
       } else {
         res.send({
           success: false,
@@ -179,7 +208,13 @@ module.exports = {
 
         })
       }
-    })
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
+        success: false,
+        message: 'Bad Request'
+      })
+    }
   }
 
 }

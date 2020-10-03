@@ -1,59 +1,83 @@
 const db = require('../helper/db')
 module.exports = {
 
-  createCompanyModel: (arr, cb) => {
-    const query = `INSERT INTO table_company (id_user, company_name, scope, city, company_description, instagram, position, linkedID)VALUES(${arr[0]},'${arr[1]}','${arr[2]}','${arr[3]}','${arr[4]}','${arr[5]}','${arr[6]}','${arr[7]}')`
-    console.log(arr)
-    db.query(query, (err, result, field) => {
-      console.log(err)
-      cb(result)
+  createCompanyModel: (setData) => {
+    return new Promise((resolve, reject) => {
+      const query = 'INSERT INTO table_company SET ?'
+      db.query(query, setData, (err, result, field) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
     })
   },
 
-  getDataCompanyByIDModel: (id, cb) => {
-    db.query(`SELECT*FROM table_company WHERE id_company=${id}`, (err, result, field) => {
-      console.log(err)
-
-      cb(result)
+  getDataCompanyByIDModel: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT*FROM table_company WHERE id_company=${id}`, (err, result, field) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
     })
   },
 
-  getDataCompanyModel: (searchKey, searchValue, limit, offset, cb) => {
-    console.log(searchValue)
-    db.query(`SELECT * FROM table_company WHERE ${searchKey} LIKE '%${searchValue}%' LIMIT ${limit} OFFSET ${offset}`, (err, result, field) => {
-      if (!err) {
-        cb(result)
-      } else {
-        res.send({
-          success: false,
-          message: 'Internal error' + err
-        })
-      }
+  getDataCompanyModel: (searchKey, searchValue, limit, offset) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * FROM table_company WHERE ${searchKey} LIKE '%${searchValue}%' LIMIT ${limit} OFFSET ${offset}`, (err, result, field) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
     })
   },
 
-  updateCompanyModel: (arr, idProject, callback) => {
-    db.query(`SELECT * FROM table_company WHERE id_company = ${idProject}`, (_err, result, _field) => {
-      if (result.length) {
-        // id_user, company_name, scope, city, company_description, instagram, position, linkedID
-        db.query(`UPDATE table_company SET id_user ='${arr[0]}', company_name='${arr[1]}', scope='${arr[2]}', city='${arr[3]}',company_description='${arr[4]}', instagram='${arr[5]}', position='${arr[6]}', linkedID='${arr[7]}'
-         WHERE id_company = ${idProject}`, (_err, result, _fields) => {
-          callback(result)
-        })
-      }
+  updateCompanyModel: (arr, idProject) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * FROM table_company WHERE id_company = ${idProject}`, (_err, result, _field) => {
+        if (result.length) {
+        // id_user, jobdesk, domicile, workplace, description_personal, job_status,instagram, github, gitlab
+          db.query(`UPDATE table_company SET id_user ='${arr[0]}', company_name='${arr[1]}', scope='${arr[2]}', city='${arr[3]}',company_description='${arr[4]}', instagram='${arr[5]}', position='${arr[6]}', linkedID='${arr[7]}' ,image='${arr[8]}'
+        WHERE id_company = ${idProject}`, (_err, result, _fields) => {
+            if (!_err) {
+              resolve(result)
+            } else {
+              reject(new Error(_err))
+            }
+          })
+        }
+      })
     })
   },
 
-  patchCompanyModel: (data, idProject, callback) => {
-    var query = `UPDATE table_company SET ${data} WHERE id_company = ${idProject}`
-    db.query(query, (_err, result, _field) => {
-      callback(result)
+  patchCompanyModel: (data, idProject, image) => {
+    return new Promise((resolve, reject) => {
+      var query = `UPDATE table_company SET ${data}, image='${image}' WHERE id_company = ${idProject}`
+      db.query(query, (_err, result, _field) => {
+        if (!_err) {
+          resolve(result)
+        } else {
+          reject(new Error(_err))
+        }
+      })
     })
   },
 
-  deleteCompanyModel: (idProject, callback) => {
-    db.query(`DELETE FROM table_company WHERE id_company=${idProject}`, (err, result, field) => {
-      callback(result)
+  deleteCompanyModel: (idProject) => {
+    return new Promise((resolve, reject) => {
+      db.query(`DELETE FROM table_company WHERE id_company=${idProject}`, (err, result, field) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
     })
   }
 
