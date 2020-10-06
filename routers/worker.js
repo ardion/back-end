@@ -11,6 +11,6 @@ router.get('/t/t', getDataWorker)
 router.put('/:id', authorization,uploadImage, updateWorker)
 router.patch('/:id',  authorization,uploadImage,patchWorker)
 router.delete('/:id',  authorization,deleteWorker)
-router.get('/',  authorization,getDataWorkerSkill)
+router.get('/',getDataWorkerSkill)
 
 module.exports = router

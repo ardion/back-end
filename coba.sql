@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 03 Okt 2020 pada 11.43
+-- Waktu pembuatan: 03 Okt 2020 pada 20.49
 -- Versi server: 10.4.14-MariaDB
 -- Versi PHP: 7.4.10
 
@@ -67,7 +67,8 @@ CREATE TABLE `table_experience` (
 --
 
 INSERT INTO `table_experience` (`id_experience`, `id_worker`, `position`, `company_name`, `description_work`, `date`) VALUES
-(8, 30, 'a', 'b', 'd', 'coba');
+(8, 30, 'a', 'b', 'd', 'coba'),
+(11, 30, 'a', 'b', 'd', 'c');
 
 -- --------------------------------------------------------
 
@@ -294,7 +295,7 @@ ALTER TABLE `table_company`
 -- AUTO_INCREMENT untuk tabel `table_experience`
 --
 ALTER TABLE `table_experience`
-  MODIFY `id_experience` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_experience` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT untuk tabel `table_portofolio`
