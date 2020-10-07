@@ -4,7 +4,9 @@ const app = express()
 const db = require('./helper/db')
 require('dotenv').config()
 const cors = require('cors')
-const { response } = require('express')
+const { request, response } = require('express')
+
+app.use('/uploads', express.static('uploads'))
 
 const registerRouter = require('./routers/register')
 const companyRouter = require('./routers/company')
