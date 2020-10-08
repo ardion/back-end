@@ -15,7 +15,7 @@ module.exports = {
 
   getDataExperienceByIDModel: (id) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT*FROM table_experience WHERE id_experience=${id}`, (err, result, field) => {
+      db.query(`SELECT*FROM table_experience WHERE id_worker=${id}`, (err, result, field) => {
         if (!err) {
           resolve(result)
         } else {

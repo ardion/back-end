@@ -52,7 +52,7 @@ module.exports = {
       res.send({
         success: true,
         message: `Data project id${id}`,
-        data: result[0]
+        data: result
       })
     } catch (error) {
       res.send({

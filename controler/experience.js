@@ -10,10 +10,7 @@ module.exports = {
 createExperience: async (req, res) => {
     try {
       const {
-        id_worker,
-        position, company_name,
-        date,
-        description_work
+        id_worker, position, company_name, date, description_work
       } = req.body
 
       const setData = {
@@ -50,7 +47,7 @@ createExperience: async (req, res) => {
       res.send({
         success: true,
         message: `Data project id${id}`,
-        data: result[0]
+        data: result
       })
     } catch (error) {
       res.send({

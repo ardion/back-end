@@ -18,7 +18,7 @@ module.exports = {
 
   getDataPortofolioByIDModel: (id) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT*FROM table_portofolio WHERE id_portofolio=${id}`, (err, result, field) => {
+      db.query(`SELECT*FROM table_portofolio WHERE id_worker=${id}`, (err, result, field) => {
         if (!err) {
           resolve(result)
         } else {
