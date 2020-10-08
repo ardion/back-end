@@ -2,7 +2,7 @@ const {
   getDataWorkerByIDModel,
   createWorkerModel,
   getDataWorkerModel,
-  updateWorkerModel, patchWorkerModel, deleteWorkerModel, getDataWorkerskillModel
+  updateWorkerModel, patchWorkerModel, deleteWorkerModel, getDataWorkerskillModel, getDataWorkerHomeModel
 } = require('../models/worker')
 
 module.exports = {
@@ -288,5 +288,45 @@ module.exports = {
         message: 'Bad Request'
       })
     }
+  },
+
+  getDataWorkerHome: async (req, res) => {
+    let { page, limit } = req.query
+    if (!limit) {
+      limit = 10
+    } else {
+      limit = parseInt(limit)
+    }
+
+    if (!page) {
+      page = 1
+    } else {
+      page = parseInt(page)
+    }
+
+    const offset = (page - 1) * limit
+
+    try {
+      const result = await getDataWorkerHomeModel( limit, offset)
+      if (result.length) {
+        res.send({
+          success: true,
+          message: 'List worker',
+          data: result
+        })
+      } else {
+        res.send({
+          success: false,
+          message: 'There is no item list'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
+        success: false,
+        message: 'Bad Request'
+      })
+    }
   }
+
 }

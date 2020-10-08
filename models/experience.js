@@ -37,17 +37,6 @@ module.exports = {
     })
   },
 
-  updateExperienceModel: (arr, idProject, callback) => {
-    db.query(`SELECT * FROM table_experience WHERE id_experience = ${idProject}`, (_err, result, _field) => {
-      if (result.length) {
-        // id_worker, position, company_name, date, description_work
-        db.query(`UPDATE table_experience SET id_worker ='${arr[0]}', position='${arr[1]}', company_name='${arr[2]}', date='${arr[3]}',description_work='${arr[4]}'
-         WHERE id_experience = ${idProject}`, (_err, result, _fields) => {
-          callback(result)
-        })
-      }
-    })
-  },
   updateExperienceModel: (arr, idProject) => {
     return new Promise((resolve, reject) => {
       db.query(`SELECT * FROM table_experience WHERE id_experience = ${idProject}`, (_err, result, _field) => {
