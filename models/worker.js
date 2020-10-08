@@ -114,7 +114,7 @@ module.exports = {
   },
   getDataWorkerHomeModel: ( limit, offset) => {
     return new Promise((resolve, reject) => {
-      const qq = `select table_worker.id_worker, table_user.name, table_worker.image,table_worker.workplace,group_concat(table_skill.skill) as skill from table_user JOIN table_worker USING(id_user) JOIN table_skill on table_worker.id_worker=table_skill.id_worker group by id_worker ORDER by name `
+      const qq = `select table_worker.id_worker, table_user.name, table_worker.image,table_worker.domicile,group_concat(table_skill.skill) as skill from table_user JOIN table_worker USING(id_user) JOIN table_skill on table_worker.id_worker=table_skill.id_worker group by id_worker ORDER by name `
       db.query(qq, (err, result, field) => {
         if (!err) {
           resolve(result)
