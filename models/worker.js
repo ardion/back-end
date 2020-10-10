@@ -97,7 +97,7 @@ module.exports = {
       console.log(order)
       console.log(sortWorker)
 
-      const qq = `select table_user.name,table_worker.image,table_worker.domicile,table_skill.skill
+      const qq = `select table_worker.id_worker, table_user.name,table_worker.image,table_worker.domicile,table_skill.skill
     from table_user JOIN table_worker USING(id_user)
     JOIN table_skill on table_worker.id_worker=table_skill.id_worker
     WHERE  ${searchKey} LIKE '%${searchValue}%' ${sortWorker} `
