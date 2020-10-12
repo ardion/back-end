@@ -4,6 +4,7 @@ module.exports = {
   createCompanyModel: (setData) => {
     return new Promise((resolve, reject) => {
       const query = 'INSERT INTO table_company SET ?'
+      console.log(setData)
       db.query(query, setData, (err, result, field) => {
         if (!err) {
           resolve(result)
