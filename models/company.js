@@ -5,7 +5,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       const query = 'INSERT INTO table_company SET ?'
       console.log(setData)
-      db.query(query, setData, (err, result, field) => {
+      db.query(query, setData, (err, result) => {
         if (!err) {
           resolve(result)
         } else {
@@ -14,7 +14,6 @@ module.exports = {
       })
     })
   },
-
   getDataCompanyByIDModel: (id) => {
     return new Promise((resolve, reject) => {
       db.query(`SELECT*FROM table_company WHERE id_company=${id}`, (err, result, field) => {

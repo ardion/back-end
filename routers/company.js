@@ -4,7 +4,7 @@ const router = Router()
 const {authorization}=require('../middleware/auth')
 const uploadImage=require('../middleware/multer')
 
-router.post('/', authorization,uploadImage,createCompany)
+router.post('/', uploadImage, createCompany)
 
 router.get('/:id', getDataCompanyByID)
 router.get('/', getDataCompany)
