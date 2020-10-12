@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 07 Okt 2020 pada 16.10
+-- Waktu pembuatan: 12 Okt 2020 pada 11.48
 -- Versi server: 10.4.14-MariaDB
 -- Versi PHP: 7.4.10
 
@@ -45,7 +45,11 @@ CREATE TABLE `table_company` (
 --
 
 INSERT INTO `table_company` (`id_company`, `id_user`, `company_name`, `scope`, `city`, `company_description`, `instagram`, `position`, `linkedID`, `image`) VALUES
-(16, 58, 'coba', 'fszdffg', 'dfg', 'dfg', 'dfdgdh', 'fdgh', 'gh', 'image-1601674235488-5e8854efa6292.jpeg');
+(16, 58, 'coba', 'fszdffg', 'dfg', 'dfg', 'dfdgdh', 'fdgh', 'gh', 'image-1601674235488-5e8854efa6292.jpeg'),
+(17, 58, 'qwe', 'fszdffg', 'dfg', 'dfg', 'dfdgdh', 'fdg', 'gh', 'image-1602492858596-WhatsApp Image 2020-09-22 at 12.13.54.jpeg'),
+(18, 58, 'qwe', 'fszdffg', 'dfg', 'dfg', 'dfdgdh', 'fdg', 'gh', 'image-1602493151452-WhatsApp Image 2020-09-22 at 12.13.54.jpeg'),
+(19, 58, 'qwe', 'fszdffg', 'dfg', 'dfg', 'dfdgdh', 'fdg', 'gh', 'image-1602493284631-WhatsApp Image 2020-09-22 at 12.13.54.jpeg'),
+(20, 58, 'qwe', 'fszdffg', 'dfg', 'dfg', 'dfdgdh', 'fdg', 'gh', 'image-1602494581932-WhatsApp Image 2020-09-22 at 12.13.54.jpeg');
 
 -- --------------------------------------------------------
 
@@ -156,7 +160,8 @@ INSERT INTO `table_skill` (`id_skill`, `id_worker`, `skill`) VALUES
 (19, 18, 'R'),
 (20, 18, 'py'),
 (21, 30, 'php'),
-(22, 30, 'R');
+(22, 30, 'R'),
+(24, 30, 'php');
 
 -- --------------------------------------------------------
 
@@ -289,7 +294,7 @@ ALTER TABLE `table_worker`
 -- AUTO_INCREMENT untuk tabel `table_company`
 --
 ALTER TABLE `table_company`
-  MODIFY `id_company` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_company` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT untuk tabel `table_experience`
@@ -319,7 +324,7 @@ ALTER TABLE `table_projectman`
 -- AUTO_INCREMENT untuk tabel `table_skill`
 --
 ALTER TABLE `table_skill`
-  MODIFY `id_skill` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id_skill` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT untuk tabel `table_user`
