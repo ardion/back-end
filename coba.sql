@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 12 Okt 2020 pada 11.48
+-- Waktu pembuatan: 13 Okt 2020 pada 17.11
 -- Versi server: 10.4.14-MariaDB
 -- Versi PHP: 7.4.10
 
@@ -49,7 +49,13 @@ INSERT INTO `table_company` (`id_company`, `id_user`, `company_name`, `scope`, `
 (17, 58, 'qwe', 'fszdffg', 'dfg', 'dfg', 'dfdgdh', 'fdg', 'gh', 'image-1602492858596-WhatsApp Image 2020-09-22 at 12.13.54.jpeg'),
 (18, 58, 'qwe', 'fszdffg', 'dfg', 'dfg', 'dfdgdh', 'fdg', 'gh', 'image-1602493151452-WhatsApp Image 2020-09-22 at 12.13.54.jpeg'),
 (19, 58, 'qwe', 'fszdffg', 'dfg', 'dfg', 'dfdgdh', 'fdg', 'gh', 'image-1602493284631-WhatsApp Image 2020-09-22 at 12.13.54.jpeg'),
-(20, 58, 'qwe', 'fszdffg', 'dfg', 'dfg', 'dfdgdh', 'fdg', 'gh', 'image-1602494581932-WhatsApp Image 2020-09-22 at 12.13.54.jpeg');
+(20, 58, 'qwe', 'fszdffg', 'dfg', 'dfg', 'dfdgdh', 'fdg', 'gh', 'image-1602494581932-WhatsApp Image 2020-09-22 at 12.13.54.jpeg'),
+(22, 58, 'qwe', 'fszdffg', 'dfg', 'dfg', 'dfdgdh', 'fdg', 'gh', 'image-1602497425834-WhatsApp Image 2020-09-22 at 12.13.54.jpeg'),
+(23, 58, 'qwe', 'fszdffg', 'dfg', 'dfg', 'dfdgdh', 'fdg', 'gh', 'image-1602497901497-WhatsApp Image 2020-09-22 at 12.13.54.jpeg'),
+(24, 58, 'coba3', 'fszdffg', 'dfg', 'dfg', 'dfdgdh', 'fdg', 'gh', 'image-1602600594270-WhatsApp Image 2020-09-22 at 12.13.54.jpeg'),
+(25, 58, 'coba3', 'fszdffg', 'dfg', 'dfg', 'dfdgdh', 'fdg', 'gh', 'image-1602600677184-WhatsApp Image 2020-09-22 at 12.13.54.jpeg'),
+(26, 58, 'coba3', 'fszdffg', 'dfg', 'dfg', 'dfdgdh', 'fdg', 'gh', 'image-1602600725834-WhatsApp Image 2020-09-22 at 12.13.54.jpeg'),
+(27, 58, 'coba3', 'fszdffg', 'dfg', 'dfg', 'dfdgdh', 'fdg', 'gh', 'image-1602600812887-WhatsApp Image 2020-09-22 at 12.13.54.jpeg');
 
 -- --------------------------------------------------------
 
@@ -130,15 +136,18 @@ INSERT INTO `table_project` (`id_project`, `id_company`, `name_project`, `descri
 CREATE TABLE `table_projectman` (
   `order_worker` int(11) NOT NULL,
   `id_project` int(11) NOT NULL,
-  `id_worker` int(11) NOT NULL
+  `id_worker` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `price` int(11) NOT NULL,
+  `project job` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `table_projectman`
 --
 
-INSERT INTO `table_projectman` (`order_worker`, `id_project`, `id_worker`) VALUES
-(4, 5, 30);
+INSERT INTO `table_projectman` (`order_worker`, `id_project`, `id_worker`, `message`, `price`, `project job`) VALUES
+(4, 5, 30, '', 0, '');
 
 -- --------------------------------------------------------
 
@@ -294,7 +303,7 @@ ALTER TABLE `table_worker`
 -- AUTO_INCREMENT untuk tabel `table_company`
 --
 ALTER TABLE `table_company`
-  MODIFY `id_company` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id_company` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT untuk tabel `table_experience`
