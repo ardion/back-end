@@ -7,7 +7,12 @@ module.exports = {
       console.log(setData)
       db.query(query, setData, (err, result) => {
         if (!err) {
-          resolve(result)
+          const newResult = {
+            id: result.insertId,
+            ...setData
+          }
+          resolve(newResult)
+          console.log(newResult)
         } else {
           reject(new Error(err))
         }
