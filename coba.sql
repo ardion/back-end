@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 13 Okt 2020 pada 17.11
+-- Waktu pembuatan: 13 Okt 2020 pada 17.25
 -- Versi server: 10.4.14-MariaDB
 -- Versi PHP: 7.4.10
 
@@ -139,14 +139,14 @@ CREATE TABLE `table_projectman` (
   `id_worker` int(11) NOT NULL,
   `message` text NOT NULL,
   `price` int(11) NOT NULL,
-  `project job` text NOT NULL
+  `project_job` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `table_projectman`
 --
 
-INSERT INTO `table_projectman` (`order_worker`, `id_project`, `id_worker`, `message`, `price`, `project job`) VALUES
+INSERT INTO `table_projectman` (`order_worker`, `id_project`, `id_worker`, `message`, `price`, `project_job`) VALUES
 (4, 5, 30, '', 0, '');
 
 -- --------------------------------------------------------
