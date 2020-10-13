@@ -14,7 +14,7 @@ module.exports = {
 
   getDataProjectByIDModel: (id) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT*FROM table_project WHERE id_project=${id}`, (err, result, field) => {
+      db.query(`SELECT*FROM table_project WHERE id_company=${id}`, (err, result, field) => {
         if (!err) {
           resolve(result)
         } else {
