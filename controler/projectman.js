@@ -9,12 +9,15 @@ module.exports = {
   createProjectman: async (req, res) => {
     try {
       const {
-        id_project, id_worker
+        id_project, id_worker, message, price, project_job
       } = req.body
 
       const setData = {
         id_project,
-        id_worker
+        id_worker, 
+        message, 
+        price, 
+        project_job
       }
 
       console.log(req.body)
