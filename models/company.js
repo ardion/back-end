@@ -21,7 +21,7 @@ module.exports = {
   },
   getDataCompanyByIDModel: (id) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT*FROM table_company WHERE id_company=${id}`, (err, result, field) => {
+      db.query(`SELECT*FROM table_company WHERE id_user=${id}`, (err, result, field) => {
         if (!err) {
           resolve(result)
         } else {
