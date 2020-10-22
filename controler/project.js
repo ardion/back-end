@@ -17,7 +17,8 @@ module.exports = {
       const setData = {
         id_company,
         name_project,
-        description_project
+        description_project,
+        image: req.file === undefined ? '' : req.file.filename
       }
 
       console.log(req.body)

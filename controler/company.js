@@ -51,6 +51,7 @@ module.exports = {
     const { id } = req.params
     try {
       const result = await getDataCompanyByIDModel(id)
+      console.log(result)
       res.send({
         success: true,
         message: `Data project id${id}`,

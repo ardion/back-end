@@ -2,8 +2,9 @@ const { Router } = require('express')
 const { getDataProjectByID, createProject, getDataProject, updateProject, patchProject, deleteProject } = require('../controler/project')
 const router = Router()
 const {authorization}=require('../middleware/auth')
+const uploadImage=require('../middleware/multer')
 
-router.post('/', authorization,createProject)
+router.post('/', authorization,uploadImage,createProject)
 
 router.get('/:id', getDataProjectByID)
 router.get('/', getDataProject)
