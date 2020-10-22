@@ -7,6 +7,7 @@ const cors = require('cors')
 const { request, response } = require('express')
 
 app.use('/uploads', express.static('uploads'))
+const morgan = require('morgan')
 
 const registerRouter = require('./routers/register')
 const companyRouter = require('./routers/company')
@@ -28,6 +29,7 @@ app.use('/project', projectRouter)
 app.use('/skill', skillRouter)
 
 app.use(cors())
+app.use(morgan('dev'))
 
 app.use((request, response, next) => {
   response.header('Access-Control-Allow-Origin', '*')
