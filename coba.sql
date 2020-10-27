@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 22 Okt 2020 pada 21.38
+-- Waktu pembuatan: 27 Okt 2020 pada 20.31
 -- Versi server: 10.4.14-MariaDB
 -- Versi PHP: 7.4.10
 
@@ -127,7 +127,8 @@ CREATE TABLE `table_project` (
 --
 
 INSERT INTO `table_project` (`id_project`, `id_company`, `name_project`, `description_project`, `image`) VALUES
-(5, 16, 'aaa', 'baa', NULL);
+(5, 16, 'aaa', 'baa', NULL),
+(7, 28, 'apk order client', 'memudahkan client untuk order', 'image-1603399504475-bg03.png');
 
 -- --------------------------------------------------------
 
@@ -141,17 +142,18 @@ CREATE TABLE `table_projectman` (
   `id_worker` int(11) NOT NULL,
   `message` text NOT NULL,
   `price` int(11) NOT NULL,
-  `project_job` text NOT NULL
+  `project_job` text NOT NULL,
+  `status` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `table_projectman`
 --
 
-INSERT INTO `table_projectman` (`order_worker`, `id_project`, `id_worker`, `message`, `price`, `project_job`) VALUES
-(4, 5, 30, '', 0, ''),
-(5, 5, 30, 'aaaa', 2334, 'aaaaaa'),
-(6, 5, 29, 'aaaa', 2334, 'aaaaaa');
+INSERT INTO `table_projectman` (`order_worker`, `id_project`, `id_worker`, `message`, `price`, `project_job`, `status`) VALUES
+(4, 5, 30, '', 0, '', 'waiting'),
+(5, 5, 30, 'aaaa', 2334, 'aaaaaa', 'waiting'),
+(6, 5, 29, 'aaaa', 2334, 'aaaaaa', 'accept');
 
 -- --------------------------------------------------------
 
@@ -173,7 +175,7 @@ INSERT INTO `table_skill` (`id_skill`, `id_worker`, `skill`) VALUES
 (19, 18, 'R'),
 (20, 18, 'py'),
 (21, 30, 'php'),
-(22, 30, 'R'),
+(22, 30, 'C'),
 (24, 30, 'php');
 
 -- --------------------------------------------------------
@@ -325,7 +327,7 @@ ALTER TABLE `table_portofolio`
 -- AUTO_INCREMENT untuk tabel `table_project`
 --
 ALTER TABLE `table_project`
-  MODIFY `id_project` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_project` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT untuk tabel `table_projectman`
