@@ -42,7 +42,6 @@ module.exports = {
     return new Promise((resolve, reject) => {
       db.query(`SELECT * FROM table_worker WHERE id_worker = ${idProject}`, (_err, result, _field) => {
         if (result.length) {
-        // id_user, jobdesk, domicile, workplace, description_personal, job_status,instagram, github, gitlab
           db.query(`UPDATE table_worker SET id_user ='${arr[0]}', jobdesk='${arr[1]}', domicile='${arr[2]}', workplace='${arr[3]}',description_personal='${arr[4]}', job_status='${arr[5]}', instagram='${arr[6]}', github='${arr[7]}', gitlab='${arr[8]}', image='${arr[9]}'
          WHERE id_worker = ${idProject}`, (_err, result, _fields) => {
             if (!_err) {

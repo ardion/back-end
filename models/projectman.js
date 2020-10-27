@@ -15,7 +15,9 @@ module.exports = {
 
   getDataProjectmanByIDModel: (id) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT*FROM table_projectman WHERE id_worker=${id}`, (err, result, field) => {
+      db.query(`select table_company.id_company, table_company.company_name,table_projectman.order_worker, table_projectman.id_project, table_projectman.message, table_projectman.price, table_projectman.project_job, table_projectman.status
+      from table_project JOIN table_projectman USING(id_project)
+          JOIN table_company on table_company.id_company=table_project.id_company WHERE id_worker=${id}`, (err, result, field) => {
         if (!err) {
           resolve(result)
         } else {
@@ -91,5 +93,4 @@ module.exports = {
       })
     })
   }
-
 }
