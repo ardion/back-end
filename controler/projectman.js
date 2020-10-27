@@ -2,7 +2,7 @@ const {
   getDataProjectmanByIDModel,
   createProjectmanModel,
   getDataProjectmanModel,
-  updateProjectmanModel, patchProjectmanModel, deleteProjectmanModel
+  updateProjectmanModel, patchProjectmanModel, deleteProjectmanModel,getDataProjectmanByIDModelPatch
 } = require('../models/projectman')
 
 module.exports = {
@@ -46,7 +46,7 @@ module.exports = {
       res.send({
         success: true,
         message: `Data project id${id}`,
-        data: result[0]
+        data: result
       })
     } catch (error) {
       res.send({
@@ -141,10 +141,10 @@ module.exports = {
 
   patchProjectman: async (req, res) => {
     const idProject = req.params.id
-    const { id_project = '', id_worker = '' } = req.body
+    const { id_project = '', id_worker = '' , status = ''} = req.body
     try {
-      if (id_project.trim() || id_worker.trim()) {
-        const result = await getDataProjectmanByIDModel(idProject)
+      if (id_project.trim() || id_worker.trim() || status.trim()) {
+        const result = await getDataProjectmanByIDModelPatch(idProject)
         const data = Object.entries(req.body).map(item => {
           console.log(item)
           return parseInt(item[1]) > 0 ? `${item[0]}=${item[1]}` : `${item[0]}='${item[1]}'`

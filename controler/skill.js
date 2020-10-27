@@ -2,7 +2,7 @@ const {
   getDataSkillByIDModel,
   createSkillModel,
   getDataSkillModel,
-  updateSkillModel, patchSkillModel, deleteSkillModel
+  updateSkillModel, patchSkillModel, deleteSkillModel, getDataSkillByIDProfileModel
 } = require('../models/skill')
 
 module.exports = {
@@ -38,8 +38,9 @@ module.exports = {
 
   getDataSkillByID: async (req, res) => {
     const { id } = req.params
+    console.log(req.params)
     try {
-      const result = await getDataSkillByIDModel(id)
+      const result = await getDataSkillByIDProfileModel(id)
       res.send({
         success: true,
         message: `Data project id${id}`,
@@ -134,46 +135,7 @@ module.exports = {
       })
     }
   },
-
-  patchSkill: (req, res) => {
-    const idSkill = req.params.id
-    const { id_worker = '', skill = '' } = req.body
-    // console.log(req.body)
-    if (id_worker.trim() || skill.trim()) {
-      getDataSkillByIDModel(idSkill, result => {
-        const data = Object.entries(req.body).map(item => {
-          console.log(item)
-          return parseInt(item[1]) > 0 ? `${item[0]}=${item[1]}` : `${item[0]}='${item[1]}'`
-        })
-        if (result.length) {
-          patchSkillModel(data, idSkill, result => {
-            if (result.affectedRows) {
-              res.send({
-                success: true,
-                messages: `Skill With id ${idSkill} has been Updated`
-              })
-            } else {
-              res.send({
-                success: false,
-                messages: 'Failed to Update'
-              })
-            }
-          })
-        } else {
-          res.send({
-            success: false,
-            messages: 'Data Skill Not Found'
-          })
-        }
-      })
-    } else {
-      res.send({
-        success: false,
-        message: 'ERROR!'
-      })
-    }
-  }, 
-patchSkill: async (req, res) => {
+  patchSkill: async (req, res) => {
     const idProject = req.params.id
     const { id_worker = '', skill = '' } = req.body
     try {
