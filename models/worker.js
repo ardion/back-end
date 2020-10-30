@@ -17,7 +17,7 @@ module.exports = {
 
   getDataWorkerByIDModel: (id) => {
     return new Promise((resolve, reject) => {
-      db.query(`select table_user.name,table_worker.id_worker,table_worker.id_user,table_worker.jobdesk,table_worker.domicile, table_worker.workplace,table_worker.description_personal,table_worker.job_status,table_worker.instagram ,table_worker.github,table_worker.gitlab,table_worker.image, group_concat(table_skill.skill) as skill from table_user JOIN table_worker USING(id_user) JOIN table_skill on table_worker.id_worker=table_skill.id_worker WHERE table_worker.id_worker=${id}`, (err, result, field) => {
+      db.query(`select table_user.name, table_worker.id_worker, table_worker.id_user, table_worker.jobdesk, table_worker.domicile, table_worker.workplace, table_worker.description_personal, table_worker.job_status, table_worker.instagram, table_worker.github, table_worker.gitlab, table_worker.image, group_concat(table_skill.skill) as skill from table_user JOIN table_worker USING(id_user) JOIN table_skill using(id_worker) WHERE table_worker.id_worker=${id}`, (err, result, field) => {
         if (!err) {
           resolve(result)
         } else {
