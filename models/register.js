@@ -33,7 +33,7 @@ module.exports = {
 
   getDataRegisterByIDModel: (id) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT*FROM table_user WHERE id_user=${id}`, (err, result, field) => {
+      db.query(`SELECT id_worker FROM table_worker WHERE id_user=${id}`, (err, result, field) => {
         if (!err) {
           resolve(result)
         } else {
