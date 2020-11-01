@@ -17,7 +17,6 @@ module.exports = {
     console.log(id)
     return new Promise((resolve, reject) => {
       db.query(`select * from table_skill where id_skill=${id}`, (err, result, field) => {
-        console.log(`select group_concat(table_skill.skill) as skill from table_skill where id_worker=${id}group by id_worker`)
         if (!err) {
           resolve(result)
         } else {
@@ -82,7 +81,7 @@ module.exports = {
   },
   getDataSkillByIDProfileModel: (id) => {
     return new Promise((resolve, reject) => {
-      db.query(`select group_concat(table_skill.skill) as skill from table_skill where id_worker=${id} group by id_worker`, (err, result, field) => {
+      db.query(`select skill, id_skill from table_skill where id_worker=${id}`, (err, result, field) => {
         if (!err) {
           resolve(result)
         } else {
