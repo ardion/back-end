@@ -17,7 +17,8 @@ module.exports = {
         id_worker, 
         message, 
         price, 
-        project_job
+        project_job,
+        status:"waiting"
       }
 
       console.log(req.body)
