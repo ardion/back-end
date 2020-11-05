@@ -7,8 +7,12 @@ module.exports = {
       const query = 'INSERT INTO table_worker SET ?'
       db.query(query, setData, (err, result, field) => {
         if (!err) {
-          console.log(result)
-          resolve(result)
+          const newResult = {
+            id: result.insertId,
+            ...setData
+          }
+          resolve(newResult)
+          console.log(newResult)
         } else {
           reject(new Error(err))
         }

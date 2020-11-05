@@ -37,7 +37,7 @@ module.exports = {
       res.status(201).send({
         success: true,
         message: 'Project Has Been Created',
-        data: setData
+        data: resultCreate
       })
     } catch (error) {
       console.log(error)
